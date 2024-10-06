@@ -1,0 +1,46 @@
+version: '3.8'
+services:
+    dynamodb-local:
+        command: "-jar DynamoDBLocal.jar -sharedDb -dbPath ./data"
+        image: "amazon/dynamodb-local:latest"
+        container_name: dynamodb-local
+        networks:
+            - mynetwork
+        ports:
+         - "8000:8000"
+        volumes:
+            - "./docker/dynamodb:/home/dynamodblocal/data"
+        working_dir: /home/dynamodblocal
+   
+    mongo:
+        image: mongo
+        container_name: mongo
+        ports:
+          - 27017:27017
+        networks:
+            - mynetwork
+        volumes:
+          - mongodbdata:/data/db
+      
+    # bookstore:
+    #     image: bookstore-web-api-image:latest
+    #     container_name: bookstore
+    #     build:
+    #         context: .
+    #         dockerfile: Dockerfile
+    #     networks:
+    #         - mynetwork
+    #     ports: 
+    #      - 8001:5000
+    #     environment:
+    #       - ASPNETCORE_ENVIRONMENT=Development
+    #     depends_on:
+    #      - dynamodb-local
+    #      - mongo
+volumes:
+  mongodbdata:
+  dynamodb-data:
+      
+networks:
+    mynetwork:
+        driver: bridge
