@@ -1,8 +1,8 @@
+using Bookstore.Api;
 using Bookstore.Api.Middlewares;
 using Bookstore.Application;
-using Bookstore.Domain.Entities;
+using Bookstore.Application.JwtFeatures;
 using Bookstore.Persistence;
-using Microsoft.AspNetCore.Identity;
 using NLog.Extensions.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,6 +14,7 @@ var builder = WebApplication.CreateBuilder(args);
 //     logging.SetMinimumLevel(LogLevel.Trace);
 // });
 builder.Services.AddSingleton<ILoggerProvider, NLogLoggerProvider>();
+
 builder.Services.AddPersistenceServices(builder.Configuration);
 builder.Services.AddApplicationServices();
 
@@ -22,10 +23,14 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+// builder.Services.AddSwaggerGen();
+builder.Services.AddDocSwagger();
 
-builder.Services.AddAuthentication()
-    .AddBearerToken(IdentityConstants.BearerScheme);
+
+builder.Services.AddJwtAuthentication(builder.Configuration);
+// .AddBearerToken(IdentityConstants.BearerScheme);     // Za builder.Services.AddAuthentication()
+builder.Services.AddSingleton<JwtHandler>();
+
 builder.Services.AddAuthorization();
 
 var app = builder.Build();

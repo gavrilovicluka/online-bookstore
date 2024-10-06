@@ -17,4 +17,15 @@ public class UserRepository : IUserRepository
     {
         return await _userManager.CreateAsync(newUser, password);
     }
+
+    public async Task<User?> GetUserByUsername(string username)
+    {
+        return await _userManager.FindByNameAsync(username);        
+    }
+    
+    public async Task<bool> CheckPassword(User user, string password)
+    {
+        return await _userManager.CheckPasswordAsync(user, password);        
+    }
+
 }
