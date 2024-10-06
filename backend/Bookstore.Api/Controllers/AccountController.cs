@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+using Bookstore.Application.CQRS.Users.Commands.CreateRole;
 using Bookstore.Application.CQRS.Users.Commands.RegisterUser;
 using Bookstore.Application.CQRS.Users.Queries.LoginUser;
 using Bookstore.Application.DTOs.Auth;
@@ -7,18 +9,36 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Bookstore.Api.Controllers;
 
-[AllowAnonymous]
-public class AccountController : ControllerBase
+public class AccountsController : ControllerBase
 {
-    public AccountController(IMediator mediator) : base(mediator)
+    public AccountsController(IMediator mediator) : base(mediator)
     {
+    }
+
+    /// <summary>
+    /// Creates new role for users
+    /// </summary>
+    /// <param name="roleName"> Role name </param>
+    /// <returns> Status code created or bad request </returns>
+    [Authorize(Roles = "Admin")]
+    [HttpPost("Role")]
+    public async Task<IActionResult> CreateRole([Required] string roleName)
+    {
+        var result = await _mediator.Send(new CreateRoleCommand(roleName));
+
+        if (result.Succeeded)
+        {
+            return StatusCode(201);
+        }
+
+        return BadRequest(result.Errors);
     }
 
     /// <summary>
     /// Register user 
     /// </summary>
     /// <param name="userRegistrationDto"> User registration DTO </param>
-    /// <returns> User registration response </returns>
+    /// <returns> Status code created or bad request </returns>
     [HttpPost("Register")]
     public async Task<IActionResult> RegisterUser([FromBody] UserRegistrationDto userRegistrationDto)
     {

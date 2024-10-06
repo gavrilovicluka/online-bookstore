@@ -26,6 +26,16 @@ public sealed class RegisterUserHandler : IRequestHandler<RegisterUserCommand, I
 
         var result = await _userRepository.RegisterUser(newUser, request.UserRegistrationDto.Password!);
 
+        var roleResult = await _userRepository.AddRoleToUser(newUser, "Customer");
+        
+        if(result.Succeeded)
+        {
+            if(!roleResult.Succeeded)
+            {
+                return roleResult;
+            }
+        }
+
         return result;
     }
 }

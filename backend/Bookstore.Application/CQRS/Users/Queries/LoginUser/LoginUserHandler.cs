@@ -27,7 +27,8 @@ public sealed class LoginUserHandler : IRequestHandler<LoginUserQuery, LoginResp
             throw new UnauthorizedAccessException(resp.ErrorMessage);
         }
 
-        var token = _jwtHandler.CreateToken(user);
+        var roles = await _userRepository.GetUserRoles(user);
+        var token = _jwtHandler.CreateToken(user, roles);
 
         return new LoginResponseDto { IsAuthSuccessfull = true, Token = token };
     }

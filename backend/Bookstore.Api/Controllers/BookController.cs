@@ -24,7 +24,6 @@ public class BookController : ControllerBase
     /// Returns all books
     /// </summary>
     /// <returns> This endpoint returns a list of Books</returns>
-    [AllowAnonymous]
     [HttpGet]
     public async Task<ActionResult<IEnumerable<BookDto>>> GetBooks()
     {
@@ -82,6 +81,7 @@ public class BookController : ControllerBase
     /// <param name="bookDto"> New book to add </param>
     /// <returns> Added book </returns>
     /// <exception cref="BadRequestException"> If fields of new book are not valid </exception>
+    [Authorize(Roles = "Admin")]
     [HttpPost]
     public async Task<IActionResult> CreateBook([FromBody] BookDto bookDto)
     {
@@ -96,6 +96,7 @@ public class BookController : ControllerBase
     /// <param name="bookDto"> New values of book properties </param>
     /// <returns> Changed book </returns>
     /// <exception cref="BadRequestException"> If fields of new book are not valid </exception>
+    [Authorize(Roles = "Admin")]
     [HttpPut("{isbn}")]
     public async Task<ActionResult<BookDto>> UpdateBook(string isbn, [FromBody] UpdateBookDto bookDto)
     {
@@ -109,6 +110,7 @@ public class BookController : ControllerBase
     /// <param name="isbn"> ISBN of book to delete </param>
     /// <returns> Success message </returns>
     /// <exception cref="BadRequestException">  If ISBN is not valid  </exception>
+    [Authorize(Roles = "Admin")]
     [HttpDelete("{isbn}")]
     public async Task<ActionResult<string>> DeleteBook(string isbn)
     { 
