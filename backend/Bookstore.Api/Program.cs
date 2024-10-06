@@ -23,6 +23,7 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+
 // builder.Services.AddSwaggerGen();
 builder.Services.AddDocSwagger();
 
@@ -49,7 +50,7 @@ app.UseAuthorization();
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
-app.MapControllers().RequireAuthorization();
+app.MapControllers(); //.RequireAuthorization();
 
 // app.MapIdentityApi<User>();
 

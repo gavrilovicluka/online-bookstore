@@ -3,6 +3,7 @@ using Bookstore.Application.Reviews.Commands.CreateReview;
 using Bookstore.Application.Reviews.Queries.GetAverageRating;
 using Bookstore.Application.Reviews.Queries.GetBookReviews;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Bookstore.Api.Controllers;
@@ -30,6 +31,7 @@ public class ReviewController : ControllerBase
     /// </summary>
     /// <param name="createReviewDto"> Book ISBN, rating and review text </param>
     /// <returns> Success message </returns>
+    [Authorize(Roles = "Admin, Customer")]
     [HttpPost]
     public async Task<ActionResult> CreateReview([FromBody] CreateReviewDto createReviewDto)
     {
